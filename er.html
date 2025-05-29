@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello</title>
+    <link rel="icon" href="174.ico" type="image/x-icon">
+</head>
+<body>
+<div class="o">Hello and happy with you♡</div>
+
+<div class="abb">
+<div class="c">日程记录</div> 
+<div class="k">
+<input class="ll" type="text"/>
+<div class="y">添加</div>
+</div>
+
+<div class="item uu">
+    <div>
+    <input type="checkbox"/>
+    <span class="name">eat</span></div>
+    <div class="del">del</div>
+</div>
+<div class="item">
+    <div>
+    <input type="checkbox"/>
+    <span class="name">eat</span></div>
+    <div class="del" onselectstart="return false" onclick="return false">del</div>
+</div>
+<div class="item">
+    <div>
+    <input type="checkbox"/>
+    <span class="name">eat</span></div>
+    <div class="del">del</div>
+</div>
+</div>
+
+<style>
+    .uu{text-decoration: line-through;
+    opacity: 0.4;
+    text-decoration-thickness: 3px; /* 设置删除线的粗细 */
+    color: #3d3636;
+    }
+    body{background: linear-gradient(to left, rgb(250, 232, 235), rgb(205, 235, 235)) ;
+    }
+    .abb{width: 98%;
+    padding-top: 30px;
+    box-sizing: border-box;
+        height: 500px;
+        background-color: rgb(166, 232, 243);
+        border-radius: 18px;
+    margin-top: 10px;
+    margin-left: 1%;
+    }
+    .o{color: #b39fc5;
+        user-select: none;
+    }
+        .c{color: rgb(252, 254, 255);
+    font-size: 36px;
+        text-align: center;
+        user-select: none;
+        }
+    .y{color: rgb(248, 242, 230);
+        cursor: pointer; /* 显示手型光标，提升交互感 */
+    font-size: 24px;
+    font-weight: 700;
+    background-color:rgb(179, 159, 197);
+    border-radius: 0 14px 14px 0;
+    width: 70px;
+    height: 54px;
+    text-align: center;
+    padding-top: 9px;
+    box-sizing: border-box;
+    user-select: none;
+    }
+    .k{display: flex;
+    margin-left: 95px;
+    transform: scale(0.9);
+    margin-top: 26px;
+    margin-bottom: 50px;
+    }
+    .ll{
+        border: 1px solid #d6d6d6;
+        outline: none;
+        border-radius: 14px 0 0 14px;
+       width: 53%;
+    height: 50px;
+    padding-left: 20px;
+    font-size: 23px;
+    color: rgb(230, 181, 201);
+    }
+    .item{background-color: #b8e6f0;
+        display: flex;
+        height: 100px;  /* 减小元素高度 */
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+    width: 68%;
+    height: 40px;
+    margin: 40px auto;
+    padding: 0 16px;
+    border-radius: 20px;
+    box-shadow: rgb(204, 172, 176) 3px 9px 13px;
+    }
+    .del{color: rgb(155, 36, 54);
+    user-select: none; /* 禁止选中 */
+      -webkit-user-select: none; /* Safari兼容性 */
+      cursor: pointer; /* 显示手型光标，提升交互感 */
+    }
+    .item > div {
+        display: flex;
+        align-items: center;}
+        .item input[type="checkbox"] {
+        margin-right: 8px;}
+    .item .name {color: #f56aa4;
+        font-size: 17px;
+        text-align: center;
+    padding-bottom: 5px;
+    box-sizing: border-box;
+    }
+    .item input[type="checkbox"] {
+            transform: scale(1.5);  /* 放大1.5倍 */
+            margin-right: 12px;     /* 调整右侧间距 */
+            accent-color: #b39fc5;  /* 自定义勾选框颜色 */}
+</style>
+<script>
+// 页面加载时，加载本地存储的任务
+window.onload = function() {
+    loadTasks();  // 加载任务
+};
+
+// 保存任务到 localStorage
+function saveTasks() {
+    const tasks = [];
+    document.querySelectorAll('.item').forEach(task => {
+        tasks.push({
+            text: task.querySelector('.name').textContent,
+            checked: task.querySelector('input[type="checkbox"]').checked
+        });
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks)); // 保存到 localStorage
+}
+
+// 从 localStorage 加载任务
+function loadTasks() {
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    tasks.forEach(task => {
+        const newTask = document.createElement('div');
+        newTask.className = 'item';
+        newTask.innerHTML = `
+            <div>
+                <input type="checkbox" ${task.checked ? 'checked' : ''}>
+                <span class="name">${task.text}</span>
+            </div>
+            <div class="del" onclick="this.closest('.item').remove(); saveTasks();">del</div>
+        `;
+        taskList.appendChild(newTask);
+
+        // 为新添加的复选框添加事件监听
+        const newCheckbox = newTask.querySelector('input[type="checkbox"]');
+        newCheckbox.addEventListener('change', function() {
+            const item = this.closest('.item');
+            if (this.checked) {
+                item.classList.add('uu');
+            } else {
+                item.classList.remove('uu');
+            }
+            saveTasks();  // 保存任务状态
+        });
+
+        // 为新添加的删除按钮添加事件监听
+        const newDeleteButton = newTask.querySelector('.del');
+        newDeleteButton.addEventListener('click', function() {
+            this.closest('.item').remove();
+            saveTasks();  // 删除后保存任务状态
+        });
+    });
+}
+
+// 原有代码（添加任务、删除任务、勾选状态等功能）保持不变
+
+var checkboxes = document.querySelectorAll('.item input[type="checkbox"]');
+if (checkboxes.length > 0) { checkboxes[0].checked = true; }
+
+const addButton = document.querySelector('.y');
+const inputField = document.querySelector('.ll');
+const taskList = document.querySelector('.abb');
+const MAX_TASKS = 4;
+
+// 添加任务事件监听
+addButton.addEventListener('click', addTask);
+inputField.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        addTask();
+    }
+});
+
+// 删除任务功能 - 为现有删除按钮添加事件监听
+document.querySelectorAll('.del').forEach(button => {
+    button.addEventListener('click', function () {
+        this.closest('.item').remove();
+        addButton.style.opacity = '1';
+        addButton.style.pointerEvents = 'auto';
+        saveTasks();  // 删除任务后保存
+    });
+});
+
+// 勾选状态变化时添加/移除删除线
+document.querySelectorAll('.item input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function () {
+        const item = this.closest('.item');
+        if (this.checked) {
+            item.classList.add('uu');
+        } else {
+            item.classList.remove('uu');
+        }
+        saveTasks();  // 保存任务状态
+    });
+});
+
+// 检查当前任务数量
+function checkTaskCount() {
+    const tasks = document.querySelectorAll('.item');
+    if (tasks.length >= MAX_TASKS) {
+        addButton.style.opacity = '0.7';
+        addButton.style.pointerEvents = 'none';
+        return false;
+    } else {
+        addButton.style.opacity = '1';
+        addButton.style.pointerEvents = 'auto';
+        return true;
+    }
+}
+
+checkTaskCount();
+
+function addTask() {
+    if (!checkTaskCount()) {
+        alert('最多只能添加4个任务！');
+        return;
+    }
+    const taskText = inputField.value.trim();
+    if (taskText === '') return;
+
+    const newTask = document.createElement('div');
+    newTask.className = 'item';
+    newTask.innerHTML = `
+        <div>
+            <input type="checkbox" onchange="this.closest('.item').classList.toggle('uu')">
+            <span class="name">${taskText}</span>
+        </div>
+        <div class="del" onclick="this.closest('.item').remove(); saveTasks();">del</div>
+    `;
+
+    const firstItem = taskList.querySelector('.item');
+    if (firstItem) {
+        taskList.insertBefore(newTask, firstItem);
+    } else {
+        taskList.appendChild(newTask);
+    }
+
+    inputField.value = '';
+
+    const newCheckbox = newTask.querySelector('input[type="checkbox"]');
+    newCheckbox.addEventListener('change', function () {
+        const item = this.closest('.item');
+        if (this.checked) {
+            item.classList.add('uu');
+        } else {
+            item.classList.remove('uu');
+        }
+        saveTasks();  // 保存任务状态
+    });
+
+    const newDeleteButton = newTask.querySelector('.del');
+    newDeleteButton.addEventListener('click', function () {
+        this.closest('.item').remove();
+        checkTaskCount();
+        saveTasks();  // 删除任务后保存
+    });
+
+    checkTaskCount();
+    saveTasks();  // 保存任务列表
+}
+</script>
+</body>
+</html>
